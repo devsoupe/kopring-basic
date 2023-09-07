@@ -1,6 +1,8 @@
 package com.devsoupe.kopringbasic.common.status
 
-enum class Gender(val desc: String) {
+enum class Gender(
+  val desc: String,
+) {
   MAN("남"),
   WOMAN("여"),
 }
