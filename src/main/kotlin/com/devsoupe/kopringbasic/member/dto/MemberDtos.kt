@@ -2,6 +2,7 @@ package com.devsoupe.kopringbasic.member.dto
 
 import com.devsoupe.kopringbasic.common.annotation.ValidEnum
 import com.devsoupe.kopringbasic.common.status.Gender
+import com.devsoupe.kopringbasic.member.entity.Member
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
@@ -66,4 +67,7 @@ data class MemberDtoRequest(
 
   private fun String.toLocalDate(): LocalDate =
     LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+  fun toEntity(): Member =
+    Member(id, loginId, password, name, birthDate, gender, email)
 }

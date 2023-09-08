@@ -1,5 +1,6 @@
 package com.devsoupe.kopringbasic.member.service
 
+import com.devsoupe.kopringbasic.common.exception.InvalidInputException
 import com.devsoupe.kopringbasic.member.dto.MemberDtoRequest
 import com.devsoupe.kopringbasic.member.entity.Member
 import com.devsoupe.kopringbasic.member.repository.MemberRepository
@@ -16,20 +17,12 @@ class MemberService(
    */
   fun signUp(memberDtoRequest: MemberDtoRequest): String {
     // ID 중복 검사
-    var member: Member? = memberRepository.findByLoginId(memberDtoRequest.loginId)
+    var member: Member? = memberRepository.findByLoginId(loginId = memberDtoRequest.loginId)
     if (member != null) {
-      return "이미 등록된 ID 입니다."
+      throw InvalidInputException(fieldName = "loginId", message = "이미 등록된 ID 입니다.")
     }
 
-    member = Member(
-      null,
-      memberDtoRequest.loginId,
-      memberDtoRequest.password,
-      memberDtoRequest.name,
-      memberDtoRequest.birthDate,
-      memberDtoRequest.gender,
-      memberDtoRequest.email,
-    )
+    member = memberDtoRequest.toEntity()
 
     memberRepository.save(member)
 
