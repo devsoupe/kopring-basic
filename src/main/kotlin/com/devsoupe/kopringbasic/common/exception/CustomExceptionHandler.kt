@@ -4,6 +4,7 @@ import com.devsoupe.kopringbasic.common.dto.BaseResponse
 import com.devsoupe.kopringbasic.common.status.ResultCode
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -35,6 +36,16 @@ class CustomExceptionHandler {
       HttpStatus.BAD_REQUEST,
     )
   }
+
+  @ExceptionHandler(BadCredentialsException::class)
+  protected fun badCredentialsException(ex: BadCredentialsException): ResponseEntity<BaseResponse<Map<String, String>>> {
+    val errors = mapOf("로그인 실패" to "아이디 혹은 비밀번호를 다시 확인하세요.")
+    return ResponseEntity(
+      BaseResponse(resultCode = ResultCode.ERROR.name, data = errors, message = ResultCode.ERROR.msg),
+      HttpStatus.BAD_REQUEST,
+    )
+  }
+
 
   @ExceptionHandler(Exception::class)
   protected fun exception(ex: InvalidInputException): ResponseEntity<BaseResponse<Map<String, String>>> {
