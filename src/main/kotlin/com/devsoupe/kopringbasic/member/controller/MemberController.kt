@@ -4,12 +4,10 @@ import com.devsoupe.kopringbasic.common.authority.TokenInfo
 import com.devsoupe.kopringbasic.common.dto.BaseResponse
 import com.devsoupe.kopringbasic.member.dto.LoginDto
 import com.devsoupe.kopringbasic.member.dto.MemberDtoRequest
+import com.devsoupe.kopringbasic.member.dto.MemberDtoResponse
 import com.devsoupe.kopringbasic.member.service.MemberService
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/member")
 @RestController
@@ -32,5 +30,14 @@ class MemberController(
   fun login(@RequestBody @Valid loginDto: LoginDto): BaseResponse<TokenInfo> {
     val tokenInfo = memberService.login(loginDto)
     return BaseResponse(data = tokenInfo)
+  }
+
+  /**
+   * 내 정보 보기
+   */
+  @GetMapping("/info/{id}")
+  fun searchMyInfo(@PathVariable id: Long): BaseResponse<MemberDtoResponse> {
+    val response = memberService.searchMyInfo(id)
+    return BaseResponse(data = response)
   }
 }

@@ -6,11 +6,13 @@ import com.devsoupe.kopringbasic.common.exception.InvalidInputException
 import com.devsoupe.kopringbasic.common.status.ROLE
 import com.devsoupe.kopringbasic.member.dto.LoginDto
 import com.devsoupe.kopringbasic.member.dto.MemberDtoRequest
+import com.devsoupe.kopringbasic.member.dto.MemberDtoResponse
 import com.devsoupe.kopringbasic.member.entity.Member
 import com.devsoupe.kopringbasic.member.entity.MemberRole
 import com.devsoupe.kopringbasic.member.repository.MemberRepository
 import com.devsoupe.kopringbasic.member.repository.MemberRoleRepository
 import jakarta.transaction.Transactional
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.stereotype.Service
@@ -50,5 +52,15 @@ class MemberService(
     val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
 
     return jwtTokenProvider.createToken(authentication)
+  }
+
+  /**
+   * 내 정보 조회
+   */
+  fun searchMyInfo(id: Long): MemberDtoResponse {
+    val member: Member =
+      memberRepository.findByIdOrNull(id) ?: throw InvalidInputException("id", "회원번호(${id})가 존재하지 않는 유저입니다.")
+
+    return member.toDto()
   }
 }
